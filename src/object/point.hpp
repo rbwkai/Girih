@@ -26,6 +26,8 @@ struct rotor : public point{
 
   rotor(float l, point& p);
   vec2 loc() const override;
+
+  void set_rot(float th);
 };
 
 #endif // !POINT

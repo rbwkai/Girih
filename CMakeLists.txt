@@ -6,6 +6,8 @@ set(CMAKE_CXX_STANDARD_REQUIRED True)
 
 add_executable(Girih 
   src/main.cpp
+  lodepng/lodepng.cpp
   src/object/point.cpp
+  src/canvas/canvas.cpp
 )
 

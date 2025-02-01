@@ -23,6 +23,9 @@ vec2 rotor::loc() const {
   return vec2(ref.x + len*cos(arg), 
               ref.y + len*sin(arg));
 }
+void rotor::set_rot(float th) {
+  arg = th;
+}
 
 
 
