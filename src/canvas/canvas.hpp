@@ -2,7 +2,7 @@
 #define CANVAS
 
 #include <bits/stdc++.h> 
-#include "../object/point.hpp"
+#include "../object/obj.hpp"
 
 using namespace std;
 struct canvas{

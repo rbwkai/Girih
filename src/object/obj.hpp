@@ -1,17 +1,8 @@
-#ifndef POINT
-#define POINT
+#ifndef OBJECT
+#define OBJECT
 
-struct vec2 {
-  float x, y;
-  vec2(float x = 0, float y = 0);
-
-  vec2 operator+(const vec2& other) const;
-};
-
-struct point {
-  virtual ~point() = default;
-  virtual vec2 loc() const = 0;
-};
+#include "./core/point.hpp"
+#include "./core/line.hpp"
 
 struct node : public point{
   vec2 v;
@@ -30,4 +21,4 @@ struct rotor : public point{
   void set_rot(float th);
 };
 
-#endif // !POINT
+#endif // !OBJECT

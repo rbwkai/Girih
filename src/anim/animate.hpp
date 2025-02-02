@@ -3,6 +3,8 @@
 
 #include <bits/stdc++.h>
 #include "../canvas/canvas.hpp"
+#include "../object/obj.hpp"
+#include "../param/parameter.hpp"
 
 #include "constants.hpp"
 #include "keyframe.hpp"
