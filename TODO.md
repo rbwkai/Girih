@@ -1,3 +1,23 @@
+# demo main PSEUDOcode for sine wave animation
+```
+canvas cnv;
+
+node ori; //(0, 0)
+rotor r(50, ori); //radius spinning at ori;
+node t(100, 0); //point that represents time in x axis;
+
+Horizontal_line H(r); //Horizontal_line though r endpoint;
+Vertical_line V(t); //kindoff a timeline
+
+Intersection I(H, V);
+
+keyframes {  //final code not fixed yet
+  t from (100, 0) to (200, 0),
+  rotor argument from (0 rad) to (2*pi rad)
+}
+
+animate(I, cnv, color, keyframes, 0);
+```
 
 ## Task Distribution
 Regardless the specifics, we all should
