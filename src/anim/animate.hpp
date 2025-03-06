@@ -24,7 +24,8 @@ void animate(point& obj,
       kf.update(t);
     }
 
-    cnv.draw(obj.loc());
+    RGBA red(255, 0, 0, 255); // Red with full opacity
+    cnv.draw(obj.loc(), red);
 
     if (!last and step % Constant::STEPS_PER_FRAME == 0) {
       string fn = "render/frame"

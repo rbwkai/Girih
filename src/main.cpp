@@ -6,7 +6,7 @@
 
 using namespace std;
 
-float pi = std::numbers::pi;
+float pi = 3.141592654;
 int main(){
   canvas cnv;
 
@@ -20,12 +20,12 @@ int main(){
   proxim d1(r_start, r1); 
 
   vector<keyframe<float>> keys = {
-    keyframe(r1.arg, (float)0, 4*pi),
-    keyframe(r2.arg, (float)0, 2*pi),
-    keyframe(r3.arg, (float)0, -8*pi),
+    keyframe<float>(r1.arg, (float)0, 4*pi),
+    keyframe<float>(r2.arg, (float)0, 2*pi),
+    keyframe<float>(r3.arg, (float)0, -8*pi),
   };
   
   cout<<"distance from start: "<<(d1.len())<<endl;
-  animate(r3, cnv, keys);
+  animate(r3, cnv, keys, 0);
   cout<<"distance from start: "<<(d1.len())<<endl;
 }
