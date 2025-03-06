@@ -12,6 +12,7 @@
 template<typename T>
 void animate(point& obj,
              canvas& cnv,
+             RGBA& color,
              std::vector<keyframe<T>>& keyframes,
              bool last = 1) {
 
@@ -24,8 +25,7 @@ void animate(point& obj,
       kf.update(t);
     }
 
-    RGBA red(255, 0, 0, 255); // Red with full opacity
-    cnv.draw(obj.loc(), red);
+    cnv.draw(obj.loc(), color);
 
     if (!last and step % Constant::STEPS_PER_FRAME == 0) {
       string fn = "render/frame"

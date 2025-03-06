@@ -26,6 +26,7 @@ int main(){
   };
   
   cout<<"distance from start: "<<(d1.len())<<endl;
-  animate(r3, cnv, keys, 0);
+  RGBA blue(0, 0, 255, 255);
+  animate(r3, cnv, blue, keys, 0);
   cout<<"distance from start: "<<(d1.len())<<endl;
 }
