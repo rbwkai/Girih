@@ -42,8 +42,8 @@ public:
   std::vector<std::vector<RGBA>> pix, ovrly;
   canvas(int s = 1000);
   void draw(vec2 p, const RGBA &color);
-  void draw_segment(const segment &seg, const RGBA &color);
-  void draw_line(const line &ln, const RGBA &color);
+  void draw_segment(const segment *seg, const RGBA &color);
+  void draw_line(const line *ln, const RGBA &color);
   void render(const char* filename);
 };
 

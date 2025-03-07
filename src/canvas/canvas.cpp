@@ -60,9 +60,9 @@ void canvas::draw(vec2 p, const RGBA &color)
     }
 }
 
-void canvas::draw_segment(const segment &seg, const RGBA &color) {
-    vec2 start = seg.start.loc();
-    vec2 end = seg.end.loc();
+void canvas::draw_segment(const segment *seg, const RGBA &color) {
+    vec2 start = seg->start.loc();
+    vec2 end = seg->end.loc();
 
     const int steps = 500; //IMPORTANT
 
@@ -99,10 +99,10 @@ void canvas::draw_segment(const segment &seg, const RGBA &color) {
 //////////////////////////////////////////////////
 ////////UNTESTED RISKY STUFF????????????????????
 ///????????????????????????????????????????????????
-void canvas::draw_line(const line &ln, const RGBA &color) {
+void canvas::draw_line(const line *ln, const RGBA &color) {
     // Compute half-size of the canvas (assuming canvas coordinates are in [-half, half])
     float half = SIZE / 2.0f;
-    l_eqn eq = ln.eqn();
+    l_eqn eq = ln->eqn();
     float a = eq.a, b = eq.b, c = eq.c;
     const float eps = 1e-6f;
     std::vector<vec2> intersections;
