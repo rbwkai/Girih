@@ -9,7 +9,7 @@
 #include "constants.hpp"
 #include "keyframe.hpp"
 
-void animate(vector<point*>& objList, vector<segment*> &segList, vector<line*>& lineList, canvas& cnv, RGBA& color,
+void animate(vector<Point*>& objList, vector<segment*> &segList, vector<Line*>& lineList, canvas& cnv, RGBA& color,
              std::vector<Keyframe> keyframes, bool last = 1) {
   const int totalSteps = Constant::TOTAL_STEPS;
 

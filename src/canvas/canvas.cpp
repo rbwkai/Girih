@@ -18,7 +18,7 @@ canvas::canvas(int s) : SIZE(s),
                         pix(s, vector<RGBA>(s, RGBA())),
                         ovrly(s, vector<RGBA>(s, RGBA(0,0,0,0))) {}
 
-void canvas::draw(vec2 p, const RGBA &color)
+void canvas::draw(Coord p, const RGBA &color)
 {
     float px = SIZE / 2.0f + p.x;
     float py = SIZE / 2.0f - p.y;
@@ -61,16 +61,16 @@ void canvas::draw(vec2 p, const RGBA &color)
 }
 
 void canvas::draw_segment(const segment *seg, const RGBA &color) {
-    vec2 start = seg->start.loc();
-    vec2 end = seg->end.loc();
+    Coord start = seg->start.loc();
+    Coord end = seg->end.loc();
 
     const int steps = 500; //IMPORTANT
 
     
     for (int k = 0; k <= steps; k++) {
          float t = static_cast<float>(k) / steps;
-         vec2 d = { end.x - start.x, end.y - start.y };
-         vec2 p = { start.x + d.x * t, start.y + d.y * t };
+         Coord d = { end.x - start.x, end.y - start.y };
+         Coord p = { start.x + d.x * t, start.y + d.y * t };
          float px = SIZE / 2.0f + p.x;
          float py = SIZE / 2.0f - p.y;
          int base_x = floor(px);
@@ -99,13 +99,13 @@ void canvas::draw_segment(const segment *seg, const RGBA &color) {
 //////////////////////////////////////////////////
 ////////UNTESTED RISKY STUFF????????????????????
 ///????????????????????????????????????????????????
-void canvas::draw_line(const line *ln, const RGBA &color) {
+void canvas::draw_line(const Line *ln, const RGBA &color) {
     // Compute half-size of the canvas (assuming canvas coordinates are in [-half, half])
     float half = SIZE / 2.0f;
     l_eqn eq = ln->eqn();
     float a = eq.a, b = eq.b, c = eq.c;
     const float eps = 1e-6f;
-    std::vector<vec2> intersections;
+    std::vector<Coord> intersections;
     
     // Intersect with vertical boundaries: x = -half and x = half
     if (fabs(b) > eps) {
@@ -145,7 +145,7 @@ void canvas::draw_line(const line *ln, const RGBA &color) {
     
     // Remove any duplicate intersection points (if any)
     auto unique_end = std::unique(intersections.begin(), intersections.end(),
-                                  [eps](const vec2 &p1, const vec2 &p2) {
+                                  [eps](const Coord &p1, const Coord &p2) {
                                       return fabs(p1.x - p2.x) < eps && fabs(p1.y - p2.y) < eps;
                                   });
     intersections.erase(unique_end, intersections.end());
@@ -153,7 +153,7 @@ void canvas::draw_line(const line *ln, const RGBA &color) {
     // In case more than two intersections were found, pick the two that are farthest apart.
     if (intersections.size() > 2) {
         float maxDist = -1.0f;
-        vec2 pt1, pt2;
+        Coord pt1, pt2;
         for (size_t i = 0; i < intersections.size(); ++i) {
             for (size_t j = i + 1; j < intersections.size(); ++j) {
                 float dx = intersections[i].x - intersections[j].x;
@@ -172,15 +172,15 @@ void canvas::draw_line(const line *ln, const RGBA &color) {
     }
     
     // Now we have exactly two endpoints from the intersection:
-    vec2 start = intersections[0];
-    vec2 end = intersections[1];
+    Coord start = intersections[0];
+    Coord end = intersections[1];
     
     const int steps = 1000; //IMPORTANT
     
     for (int k = 0; k <= steps; k++) {
          float t = static_cast<float>(k) / steps;
-         vec2 d = { end.x - start.x, end.y - start.y };
-         vec2 p = { start.x + d.x * t, start.y + d.y * t };
+         Coord d = { end.x - start.x, end.y - start.y };
+         Coord p = { start.x + d.x * t, start.y + d.y * t };
          
          // Transform mathematical coordinates to pixel coordinates.
          float px = SIZE / 2.0f + p.x;

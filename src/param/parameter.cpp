@@ -3,10 +3,10 @@
 #include "parameter.hpp"
 
 //proxim
-proxim::proxim(point& a, point&b) : a(a), b(b) {}
+proxim::proxim(Point& a, Point&b) : a(a), b(b) {}
 float proxim::len() const {
-  vec2 al = a.loc();
-  vec2 bl = b.loc();
+  Coord al = a.loc();
+  Coord bl = b.loc();
 
   float dx = al.x - bl.x;
   float dy = al.y - bl.y;

@@ -2,28 +2,28 @@
 #include "./obj.hpp"
 
 
-//point
+//Point
 node::node(float x, float y) : v(x, y){}
-vec2 node::loc() const {
+Coord node::loc() const {
   return v;
 }
 
 
-//rotor
-rotor::rotor(float l, point& p) : len(l), arg(0),
+//Rotor
+Rotor::Rotor(float l, Point& p) : len(l), arg(0),
                                   origin(p){}
-vec2 rotor::loc() const {
-  vec2 ref = origin.loc();
-  return vec2(ref.x + len*cos(arg), 
+Coord Rotor::loc() const {
+  Coord ref = origin.loc();
+  return Coord(ref.x + len*cos(arg), 
               ref.y + len*sin(arg));
 }
-void rotor::set_rot(float th) {
+void Rotor::set_rot(float th) {
   arg = th;
 }
 
 
 //Horizontal Line
-HorizontalLine::HorizontalLine(point& p) : ref(p) {}
+HorizontalLine::HorizontalLine(Point& p) : ref(p) {}
 
 l_eqn HorizontalLine::eqn() const {
   float y = ref.loc().y;
@@ -32,7 +32,7 @@ l_eqn HorizontalLine::eqn() const {
 
 
 //Perpendicular Line
-PerpendicularLine::PerpendicularLine(line& l, point& p) : base(l), ref(p) {}
+PerpendicularLine::PerpendicularLine(Line& l, Point& p) : base(l), ref(p) {}
 
 l_eqn PerpendicularLine::eqn() const {
   l_eqn base_eqn = base.eqn();

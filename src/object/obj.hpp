@@ -4,35 +4,38 @@
 #include "./core/point.hpp"
 #include "./core/line.hpp"
 
-struct node : public point{
-  vec2 v;
+struct node : public Point{
+  Coord v;
 
   node(float x = 0, float y = 0);
-  vec2 loc() const override;
+  Coord loc() const override;
 };
 
-struct rotor : public point{
+struct Rotor : public Point{
   float len, arg;
-  point& origin;
+  Point& origin;
 
-  rotor(float l, point& p);
-  vec2 loc() const override;
+  Rotor(float l, Point& p);
+  Coord loc() const override;
 
   void set_rot(float th);
 };
 
-struct HorizontalLine : public line {
-  point& ref;
-  HorizontalLine(point& p);
+struct HorizontalLine : public Line {
+  Point& ref;
+  HorizontalLine(Point& p);
   l_eqn eqn() const override;
 };
 
-struct PerpendicularLine : public line {
-  line& base;
-  point& ref;
-  PerpendicularLine(line& l, point& p);
+struct PerpendicularLine : public Line {
+  Line& base;
+  Point& ref;
+  PerpendicularLine(Line& l, Point& p);
   l_eqn eqn() const override;
 };
 
+struct Intersection : public Point{
+
+};
 
 #endif // !OBJECT

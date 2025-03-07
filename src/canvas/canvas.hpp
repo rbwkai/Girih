@@ -31,9 +31,9 @@ struct RGBA {
 };
 
 struct segment {
-  point& start;
-  point& end;
-  segment(point& s, point& e) : start(s), end(e) {}
+  Point& start;
+  Point& end;
+  segment(Point& s, Point& e) : start(s), end(e) {}
 };
 
 class canvas {
@@ -41,9 +41,9 @@ public:
   int SIZE, LINE_THICKNESS = 2;
   std::vector<std::vector<RGBA>> pix, ovrly;
   canvas(int s = 1000);
-  void draw(vec2 p, const RGBA &color);
+  void draw(Coord p, const RGBA &color);
   void draw_segment(const segment *seg, const RGBA &color);
-  void draw_line(const line *ln, const RGBA &color);
+  void draw_line(const Line *ln, const RGBA &color);
   void render(const char* filename);
 };
 
