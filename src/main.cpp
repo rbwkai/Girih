@@ -10,11 +10,12 @@ float pi = std::numbers::pi;
 int main(){
   canvas cnv;
 
-  node ori;
+  node ori(-50, 0);
 
-  rotor r1(250, ori); Keyframe kf1(r1.arg, (float)0, 2*pi);
+  rotor r1(100, ori); Keyframe kf1(r1.arg, (float)0, 2*pi);
 
   segment s1(ori, r1);
+  HorizontalLine H(r1);
 
   RGBA red(255, 0, 0, 255);
   RGBA blue(0, 0, 255, 255);
@@ -24,5 +25,5 @@ int main(){
     kf1, kfc
   };
   
-  animate(r1, s1, cnv, pen, keys, 0);
+  animate(r1, s1, H, cnv, pen, keys, 0);
 }
