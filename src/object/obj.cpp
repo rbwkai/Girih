@@ -22,5 +22,22 @@ void rotor::set_rot(float th) {
 }
 
 
+//Horizontal Line
+HorizontalLine::HorizontalLine(point& p) : ref(p) {}
+
+l_eqn HorizontalLine::eqn() const {
+  float y = ref.loc().y;
+  return l_eqn(0, 1, -y);
+}
 
 
+//Perpendicular Line
+PerpendicularLine::PerpendicularLine(line& l, point& p) : base(l), ref(p) {}
+
+l_eqn PerpendicularLine::eqn() const {
+  l_eqn base_eqn = base.eqn();
+  float A = base_eqn.a;
+  float B = base_eqn.b;
+  auto pt = ref.loc();
+  return l_eqn(B, -A, A * pt.y - B * pt.x);
+}

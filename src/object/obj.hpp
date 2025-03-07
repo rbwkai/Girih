@@ -21,4 +21,18 @@ struct rotor : public point{
   void set_rot(float th);
 };
 
+struct HorizontalLine : public line {
+  point& ref;
+  HorizontalLine(point& p);
+  l_eqn eqn() const override;
+};
+
+struct PerpendicularLine : public line {
+  line& base;
+  point& ref;
+  PerpendicularLine(line& l, point& p);
+  l_eqn eqn() const override;
+};
+
+
 #endif // !OBJECT
