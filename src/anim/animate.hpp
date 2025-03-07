@@ -9,11 +9,10 @@
 #include "constants.hpp"
 #include "keyframe.hpp"
 
-template<typename T>
 void animate(point& obj,
              canvas& cnv,
              RGBA& color,
-             std::vector<keyframe<T>>& keyframes,
+             std::vector<Keyframe> keyframes,
              bool last = 1) {
 
   const int totalSteps = Constant::TOTAL_STEPS;

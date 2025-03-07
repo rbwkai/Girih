@@ -6,27 +6,30 @@
 
 using namespace std;
 
-float pi = 3.141592654;
+float pi = std::numbers::pi;
 int main(){
   canvas cnv;
 
   node ori;
   node r_start(200, 0);
 
-  rotor r1(256, ori);
-  rotor r2(128, r1);
-  rotor r3(64, r2);
+  rotor r1(256, ori); Keyframe kf1(r1.arg, (float)0, 4*pi);
+
+  rotor r2(128, r1); Keyframe kf2(r2.arg, (float)0, 2*pi);
+
+  rotor r3(64, r2); Keyframe kf3(r3.arg, (float)0, -8*pi);
 
   proxim d1(r_start, r1); 
 
-  vector<keyframe<float>> keys = {
-    keyframe<float>(r1.arg, (float)0, 4*pi),
-    keyframe<float>(r2.arg, (float)0, 2*pi),
-    keyframe<float>(r3.arg, (float)0, -8*pi),
+  RGBA red(255, 0, 0, 255);
+  RGBA blue(0, 0, 255, 255);
+  RGBA pen; Keyframe kfc(pen, red, blue);
+
+  vector<Keyframe> keys = {
+    kf1, kf2, kf3, kfc
   };
   
   cout<<"distance from start: "<<(d1.len())<<endl;
-  RGBA blue(0, 0, 255, 255);
-  animate(r3, cnv, blue, keys, 0);
+  animate(r3, cnv, pen, keys, 0);
   cout<<"distance from start: "<<(d1.len())<<endl;
 }

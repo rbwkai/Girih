@@ -5,7 +5,6 @@
 
 using namespace std;
 
-// Helper blending function using "source over" alpha blending.
 static RGBA blend(const RGBA &dest, const RGBA &src) {
     RGBA out;
     out.r = (src.r * src.a + dest.r * (255 - src.a)) / 255;
@@ -16,29 +15,23 @@ static RGBA blend(const RGBA &dest, const RGBA &src) {
 }
 
 canvas::canvas(int s) : SIZE(s),
-                        pix(s, vector<RGBA>(s, RGBA())) {} // default: opaque white
+                        pix(s, vector<RGBA>(s, RGBA())) {}
 
                         void canvas::draw(vec2 p, const RGBA &color) {
-                          // Map the continuous point p to pixel coordinates (as floats)
                           float px = SIZE / 2.0f + p.x;
                           float py = SIZE / 2.0f - p.y;
                       
-                          // Determine the base cell (integer) where the point lies.
                           int base_x = floor(px);
                           int base_y = floor(py);
                       
-                          // Loop over the neighborhood determined by LINE_THICKNESS.
                           for (int i = base_x - LINE_THICKNESS; i <= base_x + LINE_THICKNESS; ++i) {
                               for (int j = base_y - LINE_THICKNESS; j <= base_y + LINE_THICKNESS; ++j) {
-                                  // Bounds check.
                                   if (i < 0 || i >= SIZE || j < 0 || j >= SIZE)
                                       continue;
                                   
-                                  // Calculate the center of the current cell.
                                   float cx = i + 0.5f;
                                   float cy = j + 0.5f;
                       
-                                  // Compute the Euclidean distance from the point to the cell center.
                                   float dx = px - cx;
                                   float dy = py - cy;
                                   float dist = sqrt(dx * dx + dy * dy);
@@ -58,7 +51,6 @@ canvas::canvas(int s) : SIZE(s),
                                   RGBA modColor = color;
                                   modColor.a = static_cast<unsigned char>(color.a * factor);
                       
-                                  // Blend the modulated color into the pixel grid.
                                   pix[j][i] = blend(pix[j][i], modColor);
                               }
                           }
