@@ -10,6 +10,7 @@
 #include "keyframe.hpp"
 
 void animate(point& obj,
+             segment& seg,
              canvas& cnv,
              RGBA& color,
              std::vector<Keyframe> keyframes,
@@ -30,6 +31,7 @@ void animate(point& obj,
       string fn = "render/frame"
                   +to_string(step/Constant::STEPS_PER_FRAME)
                   +".png";
+      cnv.draw_segment(seg, color);
       cnv.render(fn.c_str());
     }
   }
