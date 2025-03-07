@@ -18,30 +18,53 @@ static RGBA blend(const RGBA &dest, const RGBA &src) {
 canvas::canvas(int s) : SIZE(s),
                         pix(s, vector<RGBA>(s, RGBA())) {} // default: opaque white
 
-void canvas::draw(vec2 p, const RGBA &color) {
-    int px = SIZE/2 + p.x;
-    int py = SIZE/2 - p.y;
+                        void canvas::draw(vec2 p, const RGBA &color) {
+                          // Map the continuous point p to pixel coordinates (as floats)
+                          float px = SIZE / 2.0f + p.x;
+                          float py = SIZE / 2.0f - p.y;
+                      
+                          // Determine the base cell (integer) where the point lies.
+                          int base_x = floor(px);
+                          int base_y = floor(py);
+                      
+                          // Loop over the neighborhood determined by LINE_THICKNESS.
+                          for (int i = base_x - LINE_THICKNESS; i <= base_x + LINE_THICKNESS; ++i) {
+                              for (int j = base_y - LINE_THICKNESS; j <= base_y + LINE_THICKNESS; ++j) {
+                                  // Bounds check.
+                                  if (i < 0 || i >= SIZE || j < 0 || j >= SIZE)
+                                      continue;
+                                  
+                                  // Calculate the center of the current cell.
+                                  float cx = i + 0.5f;
+                                  float cy = j + 0.5f;
+                      
+                                  // Compute the Euclidean distance from the point to the cell center.
+                                  float dx = px - cx;
+                                  float dy = py - cy;
+                                  float dist = sqrt(dx * dx + dy * dy);
+                      
+                                  // Define the maximum distance for the kernel influence.
+                                  float maxDist = LINE_THICKNESS + 0.5f;
+                                  
+                                  // Option 1: Quadratic falloff (uncomment to try)
+                                  // float factor = std::max(0.0f, 1.0f - (dist / maxDist) * (dist / maxDist));
+                                  
+                                  // Option 2: Gaussian falloff for a smoother effect:
+                                  float sigma = maxDist / 2.0f;
+                                  float factor = exp(-(dist * dist) / (2 * sigma * sigma));
+                                  factor = std::max(0.0f, std::min(1.0f, factor)); // Clamp between 0 and 1
+                      
+                                  // Modulate the incoming color's opacity using this factor.
+                                  RGBA modColor = color;
+                                  modColor.a = static_cast<unsigned char>(color.a * factor);
+                      
+                                  // Blend the modulated color into the pixel grid.
+                                  pix[j][i] = blend(pix[j][i], modColor);
+                              }
+                          }
+                      }
+                      
 
-    if (px < 0 || px >= SIZE || py < 0 || py >= SIZE) return;
-
-    for (int dx = -LINE_THICKNESS; dx <= LINE_THICKNESS; ++dx) {
-        for (int dy = -LINE_THICKNESS; dy <= LINE_THICKNESS; ++dy) {
-            int nx = px + dx;
-            int ny = py + dy;
-
-            if (nx >= 0 && nx < SIZE && ny >= 0 && ny < SIZE) {
-                int dist = dx * dx + dy * dy;
-                int factor = 255 - dist * dist;
-                if (factor < 0) factor = 0;
-
-                RGBA modColor = color;
-                modColor.a = (color.a * factor) / 255;
-
-                pix[ny][nx] = blend(pix[ny][nx], modColor);
-            }
-        }
-    }
-}
 
 void canvas::visl(vec2 p){
 }
