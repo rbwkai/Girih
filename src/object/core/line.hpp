@@ -6,8 +6,10 @@ struct l_eqn {
   l_eqn(float a, float b, float c) : a(a), b(b), c(c) {}
 };
 
-struct line { 
-  virtual ~line() = default;
+struct Line { 
+  RGBA color;
+  Line(RGBA color) : color(color) {}
+  virtual ~Line() = default;
   virtual l_eqn eqn() const = 0;
 };
 

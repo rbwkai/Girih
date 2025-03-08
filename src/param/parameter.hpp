@@ -9,10 +9,10 @@ struct length{
 };
 
 struct proxim : public length{
-  point& a;
-  point& b;
+  Point& a;
+  Point& b;
 
-  proxim(point& a, point& b);
+  proxim(Point& a, Point& b);
   float len() const override;
 };
 
