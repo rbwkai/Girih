@@ -9,12 +9,11 @@
 #include "constants.hpp"
 #include "keyframe.hpp"
 
-void animate(vector<Point*>& objList, vector<segment*> &segList, vector<Line*>& lineList, vector<Circle*> circleList, canvas& cnv, vector<Keyframe*> keyframes, bool last = 1) {
+void animate(vector<Point*>& objList, vector<Segment*> &segList, vector<Line*>& lineList, vector<Circle*> circleList, canvas& cnv, vector<Keyframe*> keyframes, bool last = 1) {
   const int totalSteps = Constant::TOTAL_STEPS;
-
+  
   for (int step = 0; step <= totalSteps; ++step) {
-    float t = (float)(step) / totalSteps;
-
+    float t = (float) step / totalSteps;
     for (auto& kf : keyframes) {
       kf->update(t);
     }
@@ -28,14 +27,14 @@ void animate(vector<Point*>& objList, vector<segment*> &segList, vector<Line*>& 
       
       string fn = filename.str();
 
-      for(const auto& ln: lineList){
-        cnv.draw_line(ln, ln->color);
+      for(auto &ln: lineList){
+        cnv.draw(ln, ln->color);
       }
-      for(auto seg: segList){
-        cnv.draw_segment(seg, seg->color);
+      for(auto &seg: segList){
+        cnv.draw(seg, seg->color);
       }
-      for(auto cir: circleList){
-        cnv.draw_circle(cir, cir->color);
+      for(auto &cir: circleList){
+        cnv.draw(cir, cir->color);
       }
       cnv.render(fn.c_str());
     }

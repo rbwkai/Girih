@@ -3,13 +3,21 @@
 
 #include "./core/point.hpp"
 #include "./core/line.hpp"
-#include "./core/circle.hpp"
 #include "../canvas/color.hpp"
 
 struct Node : public Point{
   float x, y;
   Node(float x = 0, float y = 0, RGBA color = White);
   Coord loc() const override;
+  Node operator-(const Node &other) const{
+    return Node(x - other.x, y - other.y, color - other.color);
+  }
+  Node operator+(const Node &other) const{
+    return Node(x + other.x, y + other.y, color + other.color);
+  }
+  Node operator*(float t) const{
+    return Node(x * t, y * t, color * t);
+  }
 };
 
 struct Rotor : public Point{
@@ -124,11 +132,11 @@ struct ExternalDivision : public Point {
 //// Segment  ////
 
 
-struct segment {
+struct Segment {
   Point& start;
   Point& end;
   RGBA color;
-  segment(Point& s, Point& e, RGBA color = White) : start(s), end(e), color(color) {}
+  Segment(Point& s, Point& e, RGBA color = White) : start(s), end(e), color(color) {}
 };
 
 

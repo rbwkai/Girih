@@ -11,13 +11,13 @@
 
 class canvas {
 public:
-  int SIZE, LINE_THICKNESS = 2;
+  int WIDTH, HEIGHT, LINE_THICKNESS = 1;
   std::vector<std::vector<RGBA>> pix, ovrly;
-  canvas(int s = 1000);
+  canvas(int w = 1280, int h = 720);
   void draw(Coord p, const RGBA &color);
-  void draw_segment(const segment *seg, const RGBA &color);
-  void draw_line(const Line *ln, const RGBA &color, bool permanent = 0);
-  void draw_circle(const Circle *cir, const RGBA &color);
+  void draw(const Segment *seg, const RGBA &color);
+  void draw(const Line *ln, const RGBA &color, bool permanent = 0);
+  void draw(const Circle *cir, const RGBA &color);
   void render(const char* filename);
 };
 
