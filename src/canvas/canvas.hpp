@@ -3,38 +3,11 @@
 
 #include <vector>
 #include "../object/obj.hpp"
-
+#include "color.hpp"
 #include <bits/stdc++.h> 
 
-using namespace std;
-struct RGBA {
-    float r, g, b, a;
-    RGBA() : r(255), g(255), b(255), a(255) {}
-    RGBA(float _r, float _g, float _b, float _a)
-      : r(_r), g(_g), b(_b), a(_a) {}
 
-    RGBA operator+(const RGBA& other) const {
-        return {r + other.r, g + other.g, b + other.b, a + other.a};
-    }
 
-    RGBA operator-(const RGBA& other) const {
-        return {r - other.r, g - other.g, b - other.b, a - other.a};
-    }
-
-    RGBA operator*(float f) const {
-        return {r*f, g*f, b*f, a*f};
-    }
-
-    RGBA operator/(float f) const {
-        return {r/f, g/f, b/f, a*f};
-    }
-};
-
-struct segment {
-  Point& start;
-  Point& end;
-  segment(Point& s, Point& e) : start(s), end(e) {}
-};
 
 class canvas {
 public:
@@ -43,7 +16,8 @@ public:
   canvas(int s = 1000);
   void draw(Coord p, const RGBA &color);
   void draw_segment(const segment *seg, const RGBA &color);
-  void draw_line(const Line *ln, const RGBA &color);
+  void draw_line(const Line *ln, const RGBA &color, bool permanent = 0);
+  void draw_circle(const Circle *cir, const RGBA &color);
   void render(const char* filename);
 };
 

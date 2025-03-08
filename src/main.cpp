@@ -3,39 +3,44 @@
 #include "./object/obj.hpp"
 #include "./param/parameter.hpp"
 #include "./anim/animate.hpp"
+#include <numbers>
 
 using namespace std;
 
-float pi = std::numbers::pi;
+float pi = 3.1415927410125732421875;
+
 int main(){
-  canvas cnv(1500);
+  canvas cnv(1024);
 
-  node ori(-50, 0);
+  Node ori(0, 0);
+  Rotor r1(300, ori); Keyframe kf1(r1.arg, float(0), 4 * pi);
+  Rotor r2(50, r1, Red);   Keyframe kf2(r2.arg, float(0), 9 * pi);
+  Rotor r3(150, ori); Keyframe kf3(r3.arg, float(0), 4 * pi);
+  Rotor r4(50, r3);   Keyframe kf4(r4.arg, float(0), 8 * pi);
+  Circle cir(r1, float(50), Lavender);
+  Keyframe kf5(cir.radius, float(50), float(100));
+  segment seg1(r1, r2), seg2(r3, r4);
 
-  Rotor r1(170, ori); Keyframe kf1(r1.arg, (float)0, 2*pi);
-  Rotor r2(100, r1); Keyframe kf2(r2.arg, float(0), 3 * pi);
-  segment s1(ori, r1), s2(r1, r2); 
-  HorizontalLine H(r1);
-  PerpendicularLine P(H, r2);
-
-  RGBA red(255, 0, 0, 255);
-  RGBA blue(0, 0, 255, 255);
-  RGBA pen; Keyframe kfc(pen, red, blue);
-
-  vector<Keyframe> keys = {
-    kf1, kf2, kfc
+  Keyframe kfc1(cir.color, Blue, Red);
+  // Keyframe kfc2()
+  vector<Keyframe*> keys = {
+    &kf1, &kf2, &kf3, &kf4, &kf5, &kfc1
   };
   vector<Point*> objList = {
-    &r1, &r2
+    &r1, &r2, &r3, &r4
   };
   
   vector<segment*> segList = {
-    &s1, &s2
+    &seg1, &seg2
   };
-  
+    
   vector<Line*> lineList = {
-    &H, &P
+    
   };
 
-  animate(objList, segList, lineList, cnv, pen, keys, 0);
+  vector<Circle*> circleList = {
+    &cir
+  };
+
+  animate(objList, segList, lineList, circleList, cnv, keys, 0);
 }

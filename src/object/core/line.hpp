@@ -7,6 +7,8 @@ struct l_eqn {
 };
 
 struct Line { 
+  RGBA color;
+  Line(RGBA color) : color(color) {}
   virtual ~Line() = default;
   virtual l_eqn eqn() const = 0;
 };

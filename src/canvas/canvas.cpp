@@ -15,7 +15,7 @@ static RGBA blend(const RGBA &dest, const RGBA &src) {
 }
 
 canvas::canvas(int s) : SIZE(s),
-                        pix(s, vector<RGBA>(s, RGBA())),
+                        pix(s, vector<RGBA>(s, Black)),
                         ovrly(s, vector<RGBA>(s, RGBA(0,0,0,0))) {}
 
 void canvas::draw(Coord p, const RGBA &color)
@@ -43,22 +43,27 @@ void canvas::draw(Coord p, const RGBA &color)
             // Define the maximum distance for the kernel influence.
             float maxDist = LINE_THICKNESS + 0.5f;
 
-            // Option 1: Quadratic falloff (uncomment to try)
-            // float factor = std::max(0.0f, 1.0f - (dist / maxDist) * (dist / maxDist));
-
-            // Option 2: Gaussian falloff for a smoother effect:
+            // Adjust the sigma for smoother Gaussian falloff
             float sigma = maxDist / 2.0f;
+
+            // Option 1: Smoother Gaussian falloff for smoother edges
             float factor = exp(-(dist * dist) / (2 * sigma * sigma));
             factor = std::max(0.0f, std::min(1.0f, factor)); // Clamp between 0 and 1
+
+            // Option 2: Use smootherstep for more gradual transition
+            // float smootherT = dist / maxDist;
+            // factor = smootherT * smootherT * (3 - 2 * smootherT); // Smootherstep
 
             // Modulate the incoming color's opacity using this factor.
             RGBA modColor = color;
             modColor.a = static_cast<unsigned char>(color.a * factor);
 
+            // Blend the pixel with the modulated color
             pix[j][i] = blend(pix[j][i], modColor);
         }
     }
 }
+
 
 void canvas::draw_segment(const segment *seg, const RGBA &color) {
     Coord start = seg->start.loc();
@@ -99,7 +104,7 @@ void canvas::draw_segment(const segment *seg, const RGBA &color) {
 //////////////////////////////////////////////////
 ////////UNTESTED RISKY STUFF????????????????????
 ///????????????????????????????????????????????????
-void canvas::draw_line(const Line *ln, const RGBA &color) {
+void canvas::draw_line(const Line *ln, const RGBA &color, bool permanent) {
     // Compute half-size of the canvas (assuming canvas coordinates are in [-half, half])
     float half = SIZE / 2.0f;
     l_eqn eq = ln->eqn();
@@ -206,7 +211,8 @@ void canvas::draw_line(const Line *ln, const RGBA &color) {
                 RGBA modColor = color;
                 modColor.a = static_cast<unsigned char>(color.a * factor);
                 
-                ovrly[j][i] = blend(ovrly[j][i], modColor);
+                if(permanent) pix[j][i] = blend(pix[j][i], modColor); 
+                else ovrly[j][i] = blend(ovrly[j][i], modColor);
              }
          }
     }
@@ -228,4 +234,53 @@ void canvas::render(const char* filename){
     unsigned err = lodepng::encode(filename, image, SIZE, SIZE, LCT_RGBA);
     cout << (err ? "Error" : "Saved:") << filename << endl;
     ovrly.assign(SIZE, std::vector<RGBA>(SIZE, RGBA(0, 0, 0, 0)));
+}
+
+
+void canvas::draw_circle(const Circle *cir, const RGBA &color) {
+    const int steps = 500; // Number of points sampled on the circle
+    Coord center = cir->center.loc();
+    float radius = cir->radius;
+    // Loop through the circle's parametric form
+    for (int k = 0; k <= steps; k++) {
+        // Calculate the parameter t that represents the angle on the circle
+        float t = static_cast<float>(k) / steps * 2.0f * M_PI; // Full circle
+        
+        // Calculate the point (x, y) on the circle using parametric equations
+        Coord p = { center.x + radius * cos(t), center.y + radius * sin(t) };
+
+        // Adjust for the pixel center (similar to the line)
+        float px = SIZE / 2.0f + p.x;
+        float py = SIZE / 2.0f - p.y;
+        int base_x = floor(px);
+        int base_y = floor(py);
+
+        // Loop through neighboring pixels to account for line thickness
+        for (int i = base_x - LINE_THICKNESS; i <= base_x + LINE_THICKNESS; ++i) {
+            for (int j = base_y - LINE_THICKNESS; j <= base_y + LINE_THICKNESS; ++j) {
+                if (i < 0 || i >= SIZE || j < 0 || j >= SIZE)
+                    continue;
+
+                // Calculate the distance from the current pixel to the circle point
+                float cx = i + 0.5f;
+                float cy = j + 0.5f;
+                float dx = px - cx;
+                float dy = py - cy;
+                float dist = sqrt(dx * dx + dy * dy);
+                
+                // Gaussian smoothing based on the distance
+                float maxDist = LINE_THICKNESS + 0.5f;
+                float sigma = maxDist / 2.0f;
+                float factor = exp(-(dist * dist) / (2 * sigma * sigma));
+                factor = max(0.0f, min(1.0f, factor));
+
+                // Adjust the circle's color with transparency based on the factor
+                RGBA modColor = color;
+                modColor.a = static_cast<unsigned char>(color.a * factor);
+
+                // Blend the current color with the background
+                ovrly[j][i] = blend(ovrly[j][i], modColor);
+            }
+        }
+    }
 }
