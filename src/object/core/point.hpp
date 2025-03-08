@@ -10,6 +10,7 @@ struct Coord {
   Coord operator+(const Coord& other) const {
     return Coord(x + other.x, y + other.y);
   }
+  
 };
 
 struct Point {

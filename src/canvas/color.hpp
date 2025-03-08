@@ -23,7 +23,7 @@ struct RGBA {
     }
 
     RGBA operator/(float f) const {
-        return {r/f, g/f, b/f, a*f};
+        return {r/f, g/f, b/f, a/f};
     }
 };
 

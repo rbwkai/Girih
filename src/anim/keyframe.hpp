@@ -6,9 +6,13 @@
 #include <vector>
 #include <type_traits>
 
+#include "constants.hpp"
+#include <memory>
+using namespace Constant;
+
 struct WrapKF {
     virtual ~WrapKF() = default;
-    virtual void update(float t) const = 0;
+    virtual void update(float curTime) const = 0;
     virtual std::unique_ptr<WrapKF> clone() const = 0;
 };
 
@@ -16,30 +20,42 @@ template<typename T>
 struct CoreKF : WrapKF {
     T& variable;
     T start, end;
+    float startTime, endTime;
 
-    explicit CoreKF(T& r, T s, T e) : variable(r), start(s), end(e) {}
+    explicit CoreKF(T& r, T s, T e, float startTime, float endTime) 
+        : variable(r), start(s), end(e), startTime(startTime), endTime(endTime) {}
 
     void update(float t) const override {
-        variable = start + (end - start) * t;
+        float curTime = t * DURATION;
+        if (curTime >= startTime && curTime <= endTime)
+            variable = start + (end - start) * t;
     }
 
     std::unique_ptr<WrapKF> clone() const override {
-        return std::make_unique<CoreKF<T>>(variable, start, end);
+        return std::make_unique<CoreKF<T>>(variable, start, end, startTime, endTime);
     }
 };
 
 struct Keyframe {
     std::unique_ptr<WrapKF> ptr;
+    float startTime, endTime;
 
     template<typename T, typename = std::enable_if_t<!std::is_same<std::decay_t<T>, Keyframe>::value>>
-    Keyframe(T& r, T s, T e) : ptr(std::make_unique<CoreKF<T>>(r, s, e)) {}
+    Keyframe(T& r, T s, T e, float startTime = 0, float endTime = DURATION) 
+        : ptr(std::make_unique<CoreKF<T>>(r, s, e, startTime, endTime)),
+          startTime(startTime), endTime(endTime) {}
 
-    Keyframe(const Keyframe& other) : ptr(other.ptr->clone()) {}
+    Keyframe(const Keyframe& other) 
+        : ptr(other.ptr->clone()), startTime(other.startTime), endTime(other.endTime) {}
 
     Keyframe(Keyframe&& other) noexcept = default;
 
     Keyframe& operator=(const Keyframe& other) {
-        if (this != &other) ptr = other.ptr->clone();
+        if (this != &other) {
+            ptr = other.ptr->clone();
+            startTime = other.startTime;
+            endTime = other.endTime;
+        }
         return *this;
     }
 
@@ -49,6 +65,8 @@ struct Keyframe {
         ptr->update(t);
     }
 };
+
+
 
 #endif // !KEYFRAME
 
