@@ -217,9 +217,9 @@ void canvas::draw(const Line *ln, const RGBA &color, bool permanent) {
 
 
 void canvas::draw(const Circle *cir, const RGBA &color) {
-  const int steps = 100;  // Number of points sampled on the circle
+  const int steps = 1000;  // Number of points sampled on the circle
   Coord center = cir->center.loc();
-  float radius = cir->radius;
+  float radius = cir->radius.val();
   // Loop through the circle's parametric form
   for (int k = 0; k <= steps; k++) {
     // Calculate the parameter t that represents the angle on the circle

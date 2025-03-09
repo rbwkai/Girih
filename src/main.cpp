@@ -11,43 +11,33 @@ float pi = 3.1415927410125732421875;
 int main() {
   canvas cnv(1024, 1024);
 
-  Node ori(-200, 0);
+  Node A(-150, -100);
+  Node B(150, -100);
 
-  HorizontalLine x_axis(ori);
-  cnv.draw(&x_axis, White, 1);
+  Node C(-200, 200); 
+  Keyframe kcx(C.x, float(-200), float(200));
+  Keyframe kcy(C.y, float(200), float(100));
 
-  VerticalLine y_axis(ori);
-  cnv.draw(&y_axis, White, 1);
+  Segment ab(A, B, Sapphire), bc(B, C, Maroon), ca(C, A, Teal);
 
+  PerpendicularBisector pc(A, B), pb(A, C);
+  IntersectionPoint I(pc, pb);
 
-  Rotor r1(100, ori, Maroon);
-  Keyframe kf_r1(r1.arg, float(0), 2 * pi);
+  Proxim periR(I, A, "Peri-Radius: ");
+  Circle periC(I, periR, Flamingo);
 
-  Segment sr(ori, r1);
-
-  HorizontalLine H(r1);
-
-  Node tm(0, 0);
-  Keyframe kf_tm(tm.x, float(0), float(350));
-  VerticalLine V(tm);
-
-  IntersectionPoint I(H, V, Red);
-
-  Segment seg(I, tm, Sapphire);
-  Segment seg2(I, r1, Rosewater);
-
-  Keyframe kfc(I.color, Red, Blue);
-  PointLineDistance v_sine(r1, x_axis, "Height: ");
+  MidPoint Mc(A, B), Ma(B, C), Mb(A, C);
+  Segment Sa(I, Mc, Sapphire), Sb(I, Ma, Maroon), Sc(I, Mb, Teal);
 
 
-vector<Point*> objList = {&r1, &I};
-vector<Segment*> segList = {&sr, &seg, &seg2};
+vector<Point*> objList = {};
+vector<Segment*> segList = {&ab, &bc, &ca, &Sa, &Sb, &Sc};
 vector<Line*> lineList = {};
-vector<Circle*> circleList = {};
-vector<Keyframe*> keys = {&kf_r1, &kf_tm, &kfc};
+vector<Circle*> circleList = {&periC};
+vector<Keyframe*> keys = {&kcx, &kcy};
 
 
 animate(objList, segList, lineList,
-        circleList, v_sine, cnv, keys, 0);
+        circleList, periR, cnv, keys, 0);
 
 }

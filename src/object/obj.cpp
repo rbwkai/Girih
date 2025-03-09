@@ -135,18 +135,16 @@ PerpendicularBisector::PerpendicularBisector(Point& a, Point& b, RGBA color)
     : p1(a), p2(b), Line(color) {}
 
 l_eqn PerpendicularBisector::eqn() const {
-  // Compute the midPoint
   float mid_x = (p1.loc().x + p2.loc().x) / 2;
   float mid_y = (p1.loc().y + p2.loc().y) / 2;
 
-  // Compute differences
   float dx = p2.loc().x - p1.loc().x;
   float dy = p2.loc().y - p1.loc().y;
-
-  // Perpendicular line coefficients
-  float a = -dx;
+  
+  float a = dx;
   float b = dy;
   float c = -(a * mid_x + b * mid_y);
 
   return l_eqn(a, b, c);
 }
+

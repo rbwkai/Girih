@@ -3,6 +3,7 @@
 
 #include "./core/point.hpp"
 #include "./core/line.hpp"
+#include "../param/parameter.hpp"
 #include "../canvas/color.hpp"
 
 struct Node : public Point{
@@ -144,9 +145,9 @@ struct Segment {
 
 struct Circle{
   Point &center;
-  float radius;
+  Value& radius;
   RGBA color;
-  Circle(Point &center, float radius, RGBA color = White) : center(center), radius(radius), color(color) {}
+  Circle(Point &center, Value& radius, RGBA color = White) : center(center), radius(radius), color(color) {}
 
 };
 
