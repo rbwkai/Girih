@@ -273,7 +273,8 @@ void canvas::drawChar(Coord p, char c, const RGBA &color, int scale) {
     }else if(c >= 'A' and c <= 'Z'){
         glyph = FONT_8x12_UPPER[c - 'A'];
     }else{
-        glyph = FONT_8x12_SPECIAL[' '];
+      if(FONT_8x12_SPECIAL.count(c) == 0) return;
+        glyph = FONT_8x12_SPECIAL[c];
     }
     auto [x, y] = p;
     for (int row = 0; row < 12; ++row) {
