@@ -17,27 +17,33 @@ int main() {
   Node C(-200, 200); 
   Keyframe kcx(C.x, float(-200), float(200));
   Keyframe kcy(C.y, float(200), float(100));
+;
 
   Segment ab(A, B, Sapphire), bc(B, C, Maroon), ca(C, A, Teal);
 
   PerpendicularBisector pc(A, B), pb(A, C);
   IntersectionPoint I(pc, pb);
-
+  
   Proxim periR(I, A, "Peri-Radius: ");
   Circle periC(I, periR, Flamingo);
+
+  Node nodea(-300, 90);
+  Rotor nodec(70, nodea);
+  Keyframe kfa(nodec.arg, float(0), 2 * pi);
+  Float radius(50);
+  Circle c1(nodec, radius);
+  ExternalTangent ext(periC, c1);
 
   MidPoint Mc(A, B), Ma(B, C), Mb(A, C);
   Segment Sa(I, Mc, Sapphire), Sb(I, Ma, Maroon), Sc(I, Mb, Teal);
 
+vector<Drawable*> objList{
+  &ab, &bc, &ca, &Sa, &Sb, &Sc, &periC, &c1, &ext
+};
+vector<Point*> pointList = {};
+vector<Keyframe*> keys = {&kcx, &kcy, &kfa};
 
-vector<Point*> objList = {};
-vector<Segment*> segList = {&ab, &bc, &ca, &Sa, &Sb, &Sc};
-vector<Line*> lineList = {};
-vector<Circle*> circleList = {&periC};
-vector<Keyframe*> keys = {&kcx, &kcy};
 
-
-animate(objList, segList, lineList,
-        circleList, periR, cnv, keys, 0);
+animate(pointList, objList, periR, cnv, keys, 0);
 
 }

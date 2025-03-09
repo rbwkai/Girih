@@ -67,8 +67,8 @@ void canvas::draw(Coord p, const RGBA &color, bool permanent) {
 }
 
 void canvas::draw(const Segment *seg, const RGBA &color) {
-  Coord start = seg->start.loc();
-  Coord end = seg->end.loc();
+  Coord start = seg->start()->loc();
+  Coord end = seg->end()->loc();
 
   const int steps = 500;  // IMPORTANT
 
@@ -99,6 +99,14 @@ void canvas::draw(const Segment *seg, const RGBA &color) {
     }
   }
 }
+//External Tangent
+
+void canvas::draw(const ExternalTangent *ext, const RGBA &color){
+  auto [P1, P2] = ext->loc();
+  Segment tmp(P1, P2);
+  draw(&tmp, color);
+}
+
 
 void canvas::draw(const Line *ln, const RGBA &color, bool permanent) {
   // Compute half-sizes of the canvas (assuming canvas coordinates are in

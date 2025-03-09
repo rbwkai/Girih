@@ -12,11 +12,18 @@ struct Value{
   virtual float val() const = 0;
 };
 
+struct Float : public Value{
+  float dis;
+  Float(float dis);
+  float val() const;
+};
+
 struct Proxim : public Value{
   Point& a;
   Point& b;
-
+  float dis;
   Proxim(Point& a, Point& b, string s = "Distance of Points: ");
+  Proxim(float dis);
   float val() const override;
 };
 

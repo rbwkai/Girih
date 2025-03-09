@@ -95,16 +95,6 @@ struct PerpendicularBisector : public Line {
 };
 
 
-// intersection Point of two Lines 
-struct Intersection : public Point {
-  Line& l1;
-  Line& l2;
-  
-  Intersection(Line& Line1, Line& Line2, RGBA color = White);
-  
-  Coord loc() const;
-};
-
 
 // internal division 1:r  for two given Points 
 struct InternalDivision : public Point {
@@ -128,27 +118,39 @@ struct ExternalDivision : public Point {
   Coord loc() const override;
 };
 
-
-
-//// Segment  ////
-
-
-struct Segment {
-  Point& start;
-  Point& end;
-  RGBA color;
-  Segment(Point& s, Point& e, RGBA color = White) : start(s), end(e), color(color) {}
-};
-
-
 /// Circle  /////
 
-struct Circle{
+struct Circle : public Drawable{
   Point &center;
   Value& radius;
   RGBA color;
   Circle(Point &center, Value& radius, RGBA color = White) : center(center), radius(radius), color(color) {}
 
 };
+
+//// Segment  ////
+
+
+struct Segment : public Drawable{
+  Point& st;
+  Point& en;
+  RGBA color;
+  Segment(Point& s, Point& e, RGBA color = White) : st(s), en(e), color(color) {}
+  Segment operator=(const Segment seg){
+    st = seg.st, en = seg.en, color = seg.color;
+    return *this;
+  } 
+  Point* start() const;
+  Point* end() const;
+};
+
+struct ExternalTangent : public Drawable{
+  Circle &c1, &c2;
+  RGBA color;
+  ExternalTangent(Circle &c1, Circle &c2, RGBA color = White);
+  pair<Node, Node> loc() const;
+};
+
+
 
 #endif // !OBJECT

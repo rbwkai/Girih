@@ -13,6 +13,11 @@ float Proxim::val() const {
   return sqrt(dx*dx + dy*dy);
 }
 
+Float::Float(float dis) : dis(dis), Value("") {}
+float Float::val() const{
+    return dis;
+}
+
 PointLineDistance::PointLineDistance(Point& p, Line& l, string s) : point(p), line(l), Value(s) {}
 
 float PointLineDistance::val() const {
