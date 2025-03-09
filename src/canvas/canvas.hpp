@@ -13,6 +13,7 @@ public:
   canvas(int w = 1280, int h = 720);
   void draw(Coord p, const RGBA &color, bool permanent = 1);
   void draw(const Segment *seg, const RGBA &color);
+  void draw(const ExternalTangent *ext, const RGBA &color);
   void draw(const Line *ln, const RGBA &color, bool permanent = 0);
   void draw(const Circle *cir, const RGBA &color);
   void drawChar(const Coord, char c, const RGBA &color, int scale = 1);

@@ -148,3 +148,34 @@ l_eqn PerpendicularBisector::eqn() const {
   return l_eqn(a, b, c);
 }
 
+
+
+//Segment
+
+Point* Segment::start() const{
+  return &st;
+}
+
+Point* Segment::end() const{
+  return &en;
+}
+
+ExternalTangent::ExternalTangent(Circle &c1, Circle &c2, RGBA color) : c1(c1), c2(c2), color(color){}
+
+pair<Node, Node> ExternalTangent::loc() const{
+  auto [x1, y1] = c1.center.loc();
+  float r1 = c1.radius.val();
+  auto [x2, y2] = c2.center.loc();
+  float r2 = c2.radius.val();
+  
+  float dx = x2 - x1;
+  float dy = y2 - y1;
+  float d = sqrt(dx * dx + dy * dy);
+  
+  float scale1 = r1 / d;
+  float scale2 = r2 / d;
+  
+  Node P1 = {x1 + scale1 * dx, y1 + scale1 * dy};
+  Node P2 = {x2 - scale2 * dx, y2 - scale2 * dy};
+  return {P1, P2};
+}

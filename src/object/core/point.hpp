@@ -2,6 +2,7 @@
 #define POINT
 
 #include "../../canvas/color.hpp"
+#include "drawable.hpp"
 
 struct Coord {
   float x, y;
@@ -16,7 +17,6 @@ struct Coord {
 struct Point {
   RGBA color;
   Point(RGBA color) : color(color) {}
-  virtual ~Point() = default;
   virtual Coord loc() const = 0;
 };
 
