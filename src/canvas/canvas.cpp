@@ -4,6 +4,7 @@
 #include <iostream>
 
 #include "../../lodepng/lodepng.h"
+#include "font.hpp"
 
 using namespace std;
 
@@ -259,6 +260,38 @@ void canvas::draw(const Circle *cir, const RGBA &color) {
       }
     }
   }
+}
+
+void canvas::drawChar(Coord p, char c, const RGBA &color, int scale) {
+    if (c < 32 || c > 122) return; // Supported range
+    vector<uint16_t> glyph;
+    if(c >= 'a' and c <= 'z'){
+        glyph = FONT_8x12_LOWER[c - 'a'];
+    }else if(c >= 'A' and c <= 'Z'){
+        glyph = FONT_8x12_UPPER[c - 'A'];
+    }else{
+        glyph = FONT_8x12_SPECIAL[' '];
+    }
+    auto [x, y] = p;
+    for (int row = 0; row < 12; ++row) {
+        for (int col = 0; col < 8; ++col) {
+            if (glyph[row] & (1 << (7 - col))) { 
+                for (int dx = 0; dx < scale; ++dx) {
+                    for (int dy = 0; dy < scale; ++dy) {
+                        draw({x + col * scale + dx, y - row * scale + dy}, color);
+                    }
+                }
+            }
+        }
+    }
+}
+
+
+void canvas::drawString(Coord p, const string text, const RGBA &color, int scale) {
+    int spacing = 8 * scale + 5;
+    for (size_t i = 0; i < text.size(); ++i) {
+        drawChar({p.x + i * spacing, p.y}, text[i], color, scale);
+    }
 }
 
 
