@@ -21,10 +21,10 @@ int main() {
   VerticalLine y_axis(ori);
   cnv.draw(&y_axis, White, 1);
 
-  cnv.drawString({0, 400}, "GIRIH RANDOM WAVE", Red, 2); 
+  cnv.drawString({0, 400}, "GIRIH RANDOM WAVE 10", Red, 2); 
 
   Rotor r1(30, ori, Maroon);
-  Keyframe kff(r1.len, float(70), float(200));
+  Keyframe kff(r1.len, float(70), float(200), 2, 5);
   Keyframe kf_r1(r1.arg, float(0), 6 * pi);
 
   Segment sr(ori, r1);
