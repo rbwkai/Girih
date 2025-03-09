@@ -267,7 +267,9 @@ void canvas::draw(const Circle *cir, const RGBA &color) {
 void canvas::drawChar(Coord p, char c, const RGBA &color, int scale) {
     if (c < 32 || c > 122) return; // Supported range
     vector<uint16_t> glyph;
-    if(c >= 'a' and c <= 'z'){
+    if(c >= '0' and c <= '9'){
+        glyph = FONT_8x12_DIGIT[c - '0'];
+    }else if(c >= 'a' and c <= 'z'){
         glyph = FONT_8x12_LOWER[c - 'a'];
     }else if(c >= 'A' and c <= 'Z'){
         glyph = FONT_8x12_UPPER[c - 'A'];

@@ -13,9 +13,9 @@ void animate(vector<Point*>& objList, vector<Segment*> &segList, vector<Line*>& 
   const int totalSteps = Constant::TOTAL_STEPS;
   
   for (int step = 0; step <= totalSteps; ++step) {
-    float t = (float) step / totalSteps;
+    // float t = (float) step / totalSteps;
     for (auto& kf : keyframes) {
-      kf->update(t);
+      kf->update(step);
     }
     for(auto& obj: objList){
       cnv.draw(obj->loc(), obj->color);

@@ -25,12 +25,17 @@ struct CoreKF : WrapKF {
     explicit CoreKF(T& r, T s, T e, float startTime, float endTime) 
         : variable(r), start(s), end(e), startTime(startTime), endTime(endTime) {}
 
-    void update(float t) const override {
-        float curTime = t * DURATION;
-        if (curTime >= startTime && curTime <= endTime)
-            variable = start + (end - start) * t;
+    void update(float step) const override {
+        float curTime = (step / TOTAL_STEPS) * DURATION;
+        if(curTime < startTime) {
+            variable = start;
+        } else if(curTime > endTime) {
+            variable = end;
+        } else {
+            variable = start + (end - start) * ((curTime - startTime) / (endTime - startTime));
+        }
     }
-
+        
     std::unique_ptr<WrapKF> clone() const override {
         return std::make_unique<CoreKF<T>>(variable, start, end, startTime, endTime);
     }
