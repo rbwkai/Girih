@@ -25,7 +25,7 @@ canvas::canvas(int w, int h)
       pix(h, vector<RGBA>(w, Black)),
       ovrly(h, vector<RGBA>(w, RGBA(0, 0, 0, 0))) {}
 
-void canvas::draw(Coord p, const RGBA &color) {
+void canvas::draw(Coord p, const RGBA &color, bool permanent) {
   float px = WIDTH / 2.0f + p.x;
   float py = HEIGHT / 2.0f - p.y;
 
@@ -57,12 +57,11 @@ void canvas::draw(Coord p, const RGBA &color) {
       // float smootherT = dist / maxDist;
       // factor = smootherT * smootherT * (3 - 2 * smootherT); // Smootherstep
 
-      // Modulate the incoming color's opacity using this factor.
       RGBA modColor = color;
       modColor.a = static_cast<unsigned char>(color.a * factor);
 
-      // Blend the pixel with the modulated color
-      pix[j][i] = blend(pix[j][i], modColor);
+      if(permanent) pix[j][i] = blend(pix[j][i], modColor);
+      else ovrly[j][i] = blend(ovrly[j][i], modColor);
     }
   }
 }
@@ -282,7 +281,7 @@ void canvas::drawChar(Coord p, char c, const RGBA &color, int scale) {
             if (glyph[row] & (1 << (7 - col))) { 
                 for (int dx = 0; dx < scale; ++dx) {
                     for (int dy = 0; dy < scale; ++dy) {
-                        draw({x + col * scale + dx, y - row * scale + dy}, color);
+                        draw({x + col * scale + dx, y - row * scale + dy}, color, 0);
                     }
                 }
             }

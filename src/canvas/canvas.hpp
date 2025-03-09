@@ -11,7 +11,7 @@ public:
   int WIDTH, HEIGHT, LINE_THICKNESS = 10;
   std::vector<std::vector<RGBA>> pix, ovrly;
   canvas(int w = 1280, int h = 720);
-  void draw(Coord p, const RGBA &color);
+  void draw(Coord p, const RGBA &color, bool permanent = 1);
   void draw(const Segment *seg, const RGBA &color);
   void draw(const Line *ln, const RGBA &color, bool permanent = 0);
   void draw(const Circle *cir, const RGBA &color);

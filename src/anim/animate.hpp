@@ -9,7 +9,14 @@
 #include "constants.hpp"
 #include "keyframe.hpp"
 
-void animate(vector<Point*>& objList, vector<Segment*> &segList, vector<Line*>& lineList, vector<Circle*> circleList, canvas& cnv, vector<Keyframe*> keyframes, bool last = 1) {
+void animate(vector<Point*>& objList,
+             vector<Segment*> &segList,
+             vector<Line*>& lineList,
+             vector<Circle*> circleList,
+             Value& value,
+             canvas& cnv,
+             vector<Keyframe*> keyframes,
+             bool last = 1) {
   const int totalSteps = Constant::TOTAL_STEPS;
   
   for (int step = 0; step <= totalSteps; ++step) {
@@ -36,6 +43,7 @@ void animate(vector<Point*>& objList, vector<Segment*> &segList, vector<Line*>& 
       for(auto &cir: circleList){
         cnv.draw(cir, cir->color);
       }
+      cnv.drawString({-150, 400}, value.s + to_string(value.val()), Flamingo, 2);
       cnv.render(fn.c_str());
     }
   }

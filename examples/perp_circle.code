@@ -1,0 +1,44 @@
+#include <bits/stdc++.h>
+
+#include "./anim/animate.hpp"
+#include "./object/obj.hpp"
+#include "./param/parameter.hpp"
+
+using namespace std;
+
+float pi = 3.1415927410125732421875;
+
+int main() {
+  canvas cnv(1024);
+
+  Node ori(-200, 0);
+
+  HorizontalLine x_axis(ori);
+  cnv.draw_line(&x_axis, White, 1);
+
+  VerticalLine y_axis(ori);
+  cnv.draw_line(&y_axis, White, 1);
+
+  Rotor r1(120, ori, Maroon);
+  Keyframe kf_r1(r1.arg, float(0), 2 * pi);
+
+  segment sr(ori, r1);
+
+  Node anc(200, 0);
+  segment sh(r1, anc, Flamingo);
+  MidPoint M(anc, r1);
+
+  Rotation I(M, anc);
+  segment s2(I, M, Teal);
+  Keyframe kfc(I.color, Mauve, Blue);
+
+  vector<Keyframe*> keys = {&kf_r1, &kfc};
+  vector<Point*> objList = {&r1, &I};
+  vector<segment*> segList = {&sr, &sh, &s2};
+  vector<Line*> lineList = {};
+  vector<Circle*> circleList = {
+
+  };
+
+  animate(objList, segList, lineList, circleList, cnv, keys, 0);
+}
