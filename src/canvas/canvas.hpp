@@ -8,7 +8,7 @@
 
 class canvas {
 public:
-  int WIDTH, HEIGHT, LINE_THICKNESS = 2;
+  int WIDTH, HEIGHT, LINE_THICKNESS = 10;
   std::vector<std::vector<RGBA>> pix, ovrly;
   canvas(int w = 1280, int h = 720);
   void draw(Coord p, const RGBA &color);

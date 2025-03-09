@@ -17,6 +17,8 @@ static RGBA blend(const RGBA &dest, const RGBA &src) {
   return out;
 }
 
+float MAXDIS_PARAM = 9.0f;
+float SIGMA_PARAM = 18.0f;
 canvas::canvas(int w, int h)
     : WIDTH(w),
       HEIGHT(h),
@@ -42,10 +44,10 @@ void canvas::draw(Coord p, const RGBA &color) {
       float dist = sqrt(dx * dx + dy * dy);
 
       // Define the maximum distance for the kernel influence.
-      float maxDist = LINE_THICKNESS + 0.5f;
+      float maxDist = LINE_THICKNESS + MAXDIS_PARAM;
 
       // Adjust the sigma for smoother Gaussian falloff
-      float sigma = maxDist / 2.0f;
+      float sigma = maxDist / SIGMA_PARAM;
 
       // Option 1: Smoother Gaussian falloff for smoother edges
       float factor = exp(-(dist * dist) / (2 * sigma * sigma));
@@ -87,8 +89,8 @@ void canvas::draw(const Segment *seg, const RGBA &color) {
         float dx = px - cx;
         float dy = py - cy;
         float dist = sqrt(dx * dx + dy * dy);
-        float maxDist = LINE_THICKNESS + 0.5f;
-        float sigma = maxDist / 2.0f;
+        float maxDist = LINE_THICKNESS + MAXDIS_PARAM;
+        float sigma = maxDist / SIGMA_PARAM;
         float factor = exp(-(dist * dist) / (2 * sigma * sigma));
         factor = max(0.0f, min(1.0f, factor));
         RGBA modColor = color;
@@ -196,8 +198,8 @@ void canvas::draw(const Line *ln, const RGBA &color, bool permanent) {
         float dx = px - cx;
         float dy = py - cy;
         float dist = sqrt(dx * dx + dy * dy);
-        float maxDist = LINE_THICKNESS + 0.5f;
-        float sigma = maxDist / 2.0f;
+        float maxDist = LINE_THICKNESS + MAXDIS_PARAM;
+        float sigma = maxDist / SIGMA_PARAM;
         float factor = exp(-(dist * dist) / (2 * sigma * sigma));
         factor =
             std::max(0.0f, std::min(1.0f, factor));  // Clamp between 0 and 1
@@ -246,8 +248,8 @@ void canvas::draw(const Circle *cir, const RGBA &color) {
         float dist = sqrt(dx * dx + dy * dy);
 
         // Gaussian smoothing based on the distance
-        float maxDist = LINE_THICKNESS + 0.5f;
-        float sigma = maxDist / 2.0f;
+        float maxDist = LINE_THICKNESS + MAXDIS_PARAM;
+        float sigma = maxDist / SIGMA_PARAM;
         float factor = exp(-(dist * dist) / (2 * sigma * sigma));
         factor = max(0.0f, min(1.0f, factor));
 
