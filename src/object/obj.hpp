@@ -151,6 +151,14 @@ struct ExternalTangent : public Drawable{
   pair<Node, Node> loc() const;
 };
 
+// Text
 
+struct Text{
+  Point &loc;
+  Value &val;
+  RGBA color;
+  int scale;
+  Text(Point &loc, Value& val, RGBA color = White, int scale = 1);
+};
 
 #endif // !OBJECT

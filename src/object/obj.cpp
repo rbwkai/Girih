@@ -179,3 +179,8 @@ pair<Node, Node> ExternalTangent::loc() const{
   Node P2 = {x2 - scale2 * dx, y2 - scale2 * dy};
   return {P1, P2};
 }
+
+
+//Text
+
+Text::Text(Point &loc, Value &val, RGBA color, int scale): loc(loc), val(val), color(color), scale(scale) {}

@@ -9,7 +9,7 @@
 #include "constants.hpp"
 #include "keyframe.hpp"
 
-void animate(vector<Point*>& pointList, vector<Drawable*> objList, Value& value,
+void animate(vector<Point*>& pointList, vector<Drawable*> objList, vector<Text*> textList,
              canvas& cnv, vector<Keyframe*> keyframes, bool last = 1) {
   const int totalSteps = Constant::TOTAL_STEPS;
 
@@ -38,11 +38,12 @@ void animate(vector<Point*>& pointList, vector<Drawable*> objList, Value& value,
           cnv.draw(cir, cir->color);
         } else if (auto ext = dynamic_cast<ExternalTangent*>(obj)) {
           cnv.draw(ext, ext->color);
-        }
+        } 
       }
-
-      cnv.drawString({-150, 400}, value.s + to_string(value.val()), Flamingo,
-                     2);
+      for(auto &txt: textList){
+        cnv.drawString(txt->loc.loc() ,txt->val.s + " " + to_string(txt->val.val()), txt->color, txt->scale, 0);
+      }
+      
       cnv.render(fn.c_str());
     }
   }

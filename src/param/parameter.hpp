@@ -23,7 +23,6 @@ struct Proxim : public Value{
   Point& b;
   float dis;
   Proxim(Point& a, Point& b, string s = "Distance of Points: ");
-  Proxim(float dis);
   float val() const override;
 };
 
