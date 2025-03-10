@@ -16,8 +16,8 @@ public:
   void draw(const ExternalTangent *ext, const RGBA &color);
   void draw(const Line *ln, const RGBA &color, bool permanent = 0);
   void draw(const Circle *cir, const RGBA &color);
-  void drawChar(const Coord, char c, const RGBA &color, int scale = 1);
-  void drawString(const Coord, string s, const RGBA &color, int scale = 1);
+  void drawChar(const Coord, char c, const RGBA &color, int scale = 1, int permanent = 1);
+  void drawString(const Coord, string s, const RGBA &color, int scale = 1, int permanent = 1);
 
   void render(const char* filename);
 };

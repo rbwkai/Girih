@@ -27,6 +27,7 @@ int main() {
   Proxim periR(I, A, "Peri-Radius: ");
   Circle periC(I, periR, Flamingo);
 
+  Node ul(-300, 400);
   Node nodea(-300, 90);
   Rotor nodec(70, nodea);
   Keyframe kfa(nodec.arg, float(0), 2 * pi);
@@ -36,14 +37,18 @@ int main() {
 
   MidPoint Mc(A, B), Ma(B, C), Mb(A, C);
   Segment Sa(I, Mc, Sapphire), Sb(I, Ma, Maroon), Sc(I, Mb, Teal);
+  Text txt(ul, periR, White, 2);
 
 vector<Drawable*> objList{
   &ab, &bc, &ca, &Sa, &Sb, &Sc, &periC, &c1, &ext
 };
+
 vector<Point*> pointList = {};
 vector<Keyframe*> keys = {&kcx, &kcy, &kfa};
+vector<Text*> textList = {
+  &txt
+};
 
-
-animate(pointList, objList, periR, cnv, keys, 0);
+animate(pointList, objList, textList, cnv, keys, 0);
 
 }

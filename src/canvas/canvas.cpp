@@ -271,7 +271,7 @@ void canvas::draw(const Circle *cir, const RGBA &color) {
   }
 }
 
-void canvas::drawChar(Coord p, char c, const RGBA &color, int scale) {
+void canvas::drawChar(Coord p, char c, const RGBA &color, int scale, int permanent) {
     if (c < 32 || c > 122) return; // Supported range
     vector<uint16_t> glyph;
     if(c >= '0' and c <= '9'){
@@ -290,7 +290,7 @@ void canvas::drawChar(Coord p, char c, const RGBA &color, int scale) {
             if (glyph[row] & (1 << (7 - col))) { 
                 for (int dx = 0; dx < scale; ++dx) {
                     for (int dy = 0; dy < scale; ++dy) {
-                        draw({x + col * scale + dx, y - row * scale + dy}, color, 0);
+                        draw({x + col * scale + dx, y - row * scale + dy}, color, permanent);
                     }
                 }
             }
@@ -299,10 +299,10 @@ void canvas::drawChar(Coord p, char c, const RGBA &color, int scale) {
 }
 
 
-void canvas::drawString(Coord p, const string text, const RGBA &color, int scale) {
+void canvas::drawString(Coord p, const string text, const RGBA &color, int scale, int permanent) {
     int spacing = 8 * scale + 5;
     for (size_t i = 0; i < text.size(); ++i) {
-        drawChar({p.x + i * spacing, p.y}, text[i], color, scale);
+        drawChar({p.x + i * spacing, p.y}, text[i], color, scale, permanent);
     }
 }
 

@@ -54,7 +54,7 @@ struct Keyframe {
         : ptr(other.ptr->clone()), startTime(other.startTime), endTime(other.endTime) {}
 
     Keyframe(Keyframe&& other) noexcept = default;
-
+    Keyframe() {}
     Keyframe& operator=(const Keyframe& other) {
         if (this != &other) {
             ptr = other.ptr->clone();
