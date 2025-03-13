@@ -27,13 +27,9 @@ struct CoreKF : WrapKF {
 
     void update(float step) const override {
         float curTime = (step / TOTAL_STEPS) * DURATION;
-        if(curTime < startTime) {
-            variable = start;
-        } else if(curTime > endTime) {
-            variable = end;
-        } else {
-            variable = start + (end - start) * ((curTime - startTime) / (endTime - startTime));
-        }
+        if(curTime < startTime || curTime > endTime) return;
+        
+        variable = start + (end - start) * ((curTime - startTime) / (endTime - startTime));
     }
         
     std::unique_ptr<WrapKF> clone() const override {

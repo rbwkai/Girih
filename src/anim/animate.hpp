@@ -9,17 +9,15 @@
 #include "constants.hpp"
 #include "keyframe.hpp"
 
-void animate(vector<Point*>& pointList, vector<Drawable*> objList, vector<Text*> textList,
-             canvas& cnv, vector<Keyframe*> keyframes, bool last = 1) {
+void animate(vector<tuple<Point*, int>>& pointList, vector<tuple<Drawable*, int>> objList, vector<tuple<Text*, int>> textList, canvas& cnv, vector<Keyframe*> keyframes, bool last = 1) {
   const int totalSteps = Constant::TOTAL_STEPS;
 
   for (int step = 0; step <= totalSteps; ++step) {
-    // float t = (float) step / totalSteps;
     for (auto& kf : keyframes) {
       kf->update(step);
     }
-    for (auto& obj : pointList) {
-      cnv.draw(obj->loc(), obj->color);
+    for (auto& [obj, parmament] : pointList) {
+      cnv.draw(obj->loc(), obj->color, parmament);
     }
 
     if (!last and step % Constant::STEPS_PER_FRAME == 0) {
@@ -29,18 +27,18 @@ void animate(vector<Point*>& pointList, vector<Drawable*> objList, vector<Text*>
 
       string fn = filename.str();
 
-      for (auto& obj : objList) {
+      for (auto& [obj, parmanent] : objList) {
         if (auto seg = dynamic_cast<Segment*>(obj)) {
-          cnv.draw(seg, seg->color);
+          cnv.draw(seg, seg->color, parmanent);
         } else if (auto ln = dynamic_cast<Line*>(obj)) {
-          cnv.draw(ln, ln->color, false);
+          cnv.draw(ln, ln->color, parmanent);
         } else if (auto cir = dynamic_cast<Circle*>(obj)) {
-          cnv.draw(cir, cir->color);
+          cnv.draw(cir, cir->color, parmanent);
         } else if (auto ext = dynamic_cast<ExternalTangent*>(obj)) {
-          cnv.draw(ext, ext->color);
+          cnv.draw(ext, ext->color, parmanent);
         } 
       }
-      for(auto &txt: textList){
+      for(auto& [txt, parmanent]: textList){
         cnv.drawString(txt->loc.loc() ,txt->val.s + " " + to_string(txt->val.val()), txt->color, txt->scale, 0);
       }
       

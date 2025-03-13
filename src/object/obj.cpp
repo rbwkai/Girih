@@ -7,7 +7,7 @@ Node::Node(float x, float y, RGBA color) : x(x), y(y), Point(color) {}
 Coord Node::loc() const { return Coord(x, y); }
 
 // Rotor
-Rotor::Rotor(float l, Point& p, RGBA color)
+Rotor::Rotor(Point& p, float l, RGBA color)
     : len(l), arg(0), origin(p), Point(color) {}
 Coord Rotor::loc() const {
   Coord ref = origin.loc();
