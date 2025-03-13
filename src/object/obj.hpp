@@ -25,7 +25,7 @@ struct Rotor : public Point{
   float len, arg;
   Point& origin;
 
-  Rotor(float l, Point& p, RGBA color = White);
+  Rotor(Point& p, float l, RGBA color = White);
   Coord loc() const override;
 
   void set_rot(float th);
@@ -125,7 +125,6 @@ struct Circle : public Drawable{
   Value& radius;
   RGBA color;
   Circle(Point &center, Value& radius, RGBA color = White) : center(center), radius(radius), color(color) {}
-
 };
 
 //// Segment  ////
