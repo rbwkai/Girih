@@ -1,9 +1,16 @@
 #include "canvas.hpp"
 
+#include <fcntl.h>
+#include <unistd.h>
+
 #include <algorithm>
+#include <cstdio>
+#include <fstream>
 #include <iostream>
+#include <vector>
 
 #include "../../lodepng/lodepng.h"
+#include "../anim/constants.hpp"
 #include "font.hpp"
 
 using namespace std;
@@ -61,15 +68,15 @@ void canvas::draw(Coord p, const RGBA &color, bool permanent) {
 }
 
 void canvas::draw(const Segment *seg, const RGBA &color, bool parmanent) {
-  Coord start = seg->start()->loc();
-  Coord end = seg->end()->loc();
+  auto [x1, y1] = seg->start()->loc();
+  auto [x2, y2] = seg->end()->loc();
 
-  const int steps = 500;  // IMPORTANT
+  const int steps = hypot(x2 - x1, y2 - y1);  // IMPORTANT
 
   for (int k = 0; k <= steps; k++) {
     float t = static_cast<float>(k) / steps;
-    Coord d = {end.x - start.x, end.y - start.y};
-    Coord p = {start.x + d.x * t, start.y + d.y * t};
+    Coord d = {x2 - x1, y2 - y1};
+    Coord p = {x1 + d.x * t, y1 + d.y * t};
     float px = WIDTH / 2.0f + p.x;
     float py = HEIGHT / 2.0f - p.y;
     int base_x = floor(px);
@@ -221,31 +228,20 @@ void canvas::draw(const Line *ln, const RGBA &color, bool permanent) {
 }
 
 void canvas::draw(const Circle *cir, const RGBA &color, bool parmanent) {
-  const int steps = 1000;  // Number of points sampled on the circle
-  const float step_angle = 2.0f * M_PI / steps;  // Precompute step size
   Coord center = cir->center.loc();
   float radius = cir->radius.val();
-
-  // Lookup tables for sine and cosine values
-  static float cosLUT[steps + 1], sinLUT[steps + 1];
-  static bool lutInitialized = false;
-
-  if (!lutInitialized) {
-    for (int k = 0; k <= steps; k++) {
-      float angle = k * step_angle;
-      cosLUT[k] = cos(angle);
-      sinLUT[k] = sin(angle);
-    }
-    lutInitialized = true;
-  }
+  const int steps =
+      4.0 * M_PI * radius;  // Number of points sampled on the circle
+  const float step_angle = 2.0f * M_PI / steps;  // Precompute step size
 
   float px_center = WIDTH / 2.0f + center.x;
   float py_center = HEIGHT / 2.0f - center.y;
 
   for (int k = 0; k <= steps; k++) {
-    float px = px_center + radius * cosLUT[k];
+    float px = px_center + radius * cos(k * step_angle);
     float py =
-        py_center - radius * sinLUT[k];  // Y is inverted for screen coordinates
+        py_center -
+        radius * sin(k * step_angle);  // Y is inverted for screen coordinates
 
     int base_x = (int)px;
     int base_y = (int)py;
@@ -312,38 +308,60 @@ void canvas::drawString(Coord p, const string text, const RGBA &color,
 
 ////////////////////////////////////////////////////////////////////////
 
-
 void canvas::render(const char *filename) {
-  std::vector<unsigned char> image(WIDTH * HEIGHT * 4);  // No unnecessary zero initialization
+  std::ofstream file(filename, std::ios::binary);
+  if (!file) {
+    std::cerr << "Error opening file: " << filename << std::endl;
+    return;
+  }
 
-  int idx = 0;
+  // Write PPM header
+  file << "P6\n" << WIDTH << " " << HEIGHT << "\n255\n";
+
+  // Buffer all pixel data
+  vector<unsigned char> buffer(WIDTH * HEIGHT * 3);
+  unsigned idx = 0;
+
   for (int i = 0; i < HEIGHT; ++i) {
     for (int j = 0; j < WIDTH; ++j) {
       RGBA combined = blend(pix[i][j], ovrly[i][j]);
-      image[idx++] = combined.r;
-      image[idx++] = combined.g;
-      image[idx++] = combined.b;
-      image[idx++] = combined.a;
+      buffer[idx++] = combined.r;
+      buffer[idx++] = combined.g;
+      buffer[idx++] = combined.b;
     }
   }
 
-  // Optimize PNG encoding (disable compression for faster saving)
-  std::vector<unsigned char> png;
-  lodepng::State state;
+  // Single write call for all pixel data
+  file.write(reinterpret_cast<char *>(buffer.data()), buffer.size());
+  file.close();
 
-  state.encoder.zlibsettings.use_lz77 = 0;  // Disable LZ77 compression for speed
-  state.encoder.zlibsettings.btype = 0;     // No compression
-  state.encoder.add_id = false;             // Remove metadata
+  std::cout << "Saved: " << filename << std::endl;
 
-  unsigned err = lodepng::encode(png, image, WIDTH, HEIGHT, state);
-
-  if (!err) {
-    lodepng::save_file(png, filename);
-    std::cout << "Saved: " << filename << std::endl;
-  } else {
-    std::cout << "Error: " << lodepng_error_text(err) << std::endl;
+  // **Optimized overlay clearing**
+  static const std::vector<RGBA> zeroRow(WIDTH, RGBA(0, 0, 0, 0));
+  for (auto &row : ovrly) {
+    row = zeroRow;  // Efficient row assignment
   }
-
-  // Efficiently clear overlay
-  std::fill(ovrly.begin(), ovrly.end(), std::vector<RGBA>(WIDTH, RGBA(0, 0, 0, 0)));
 }
+
+// --------   Use this for png image   ------- //
+
+// void canvas::render(const char *filename) {
+//   std::vector<unsigned char> image(WIDTH * HEIGHT * 4, 0);
+
+//   for (int i = 0; i < HEIGHT; ++i) {
+//     for (int j = 0; j < WIDTH; ++j) {
+//       RGBA combined = blend(pix[i][j], ovrly[i][j]);
+
+//       int idx = (i * WIDTH + j) * 4;
+//       image[idx + 0] = combined.r;
+//       image[idx + 1] = combined.g;
+//       image[idx + 2] = combined.b;
+//       image[idx + 3] = combined.a;
+//     }
+//   }
+//   unsigned err = lodepng::encode(filename, image, WIDTH, HEIGHT, LCT_RGBA);
+//   cout << (err ? "Error: " : "Saved: ") << filename << endl;
+
+//   ovrly.assign(HEIGHT, std::vector<RGBA>(WIDTH, RGBA(0, 0, 0, 0)));
+// }
