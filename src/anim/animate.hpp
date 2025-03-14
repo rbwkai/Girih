@@ -23,7 +23,7 @@ void animate(vector<tuple<Point*, int>>& pointList, vector<tuple<Drawable*, int>
     if (!last and step % Constant::STEPS_PER_FRAME == 0) {
       ostringstream filename;
       filename << "render/frame" << std::setw(4) << std::setfill('0')
-               << step / Constant::STEPS_PER_FRAME << ".png";
+               << step / Constant::STEPS_PER_FRAME << ".ppm";
 
       string fn = filename.str();
 

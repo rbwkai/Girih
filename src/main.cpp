@@ -6,10 +6,8 @@
 
 using namespace std;
 
-float pi = 3.1415927410125732421875;
-
 int main() {
-  canvas cnv(1024, 1024);
+  canvas cnv(1024 * 2, 1024 * 2);
 
   Node A(-150, -100);
   Node B(150, -100);
