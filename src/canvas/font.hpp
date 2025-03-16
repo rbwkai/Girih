@@ -3,6 +3,8 @@
 
 #include <bits/stdc++.h>
 
+using namespace std;
+
 vector<uint16_t> FONT_8x12_UPPER[26] = {
     // 'A' (ASCII 65)
     {0b00011000, 0b00100100, 0b00100100, 0b01000010, 0b01000010, 0b01111110,
