@@ -1,6 +1,7 @@
 #ifndef OBJECT
 #define OBJECT
 
+#include <functional>
 #include "./core/point.hpp"
 #include "./core/line.hpp"
 #include "../param/parameter.hpp"
@@ -29,6 +30,13 @@ struct Rotor : public Point{
   Coord loc() const override;
 
   void set_rot(float th);
+};
+
+struct PointSum : public Point {
+  function<Coord(const Point&, const Point&)> locFun;
+  Point &a, &b;
+  PointSum(Point &a, Point &b, function<Coord(const Point&, const Point&)> locFun = [](const Point &a, const Point &b){ return a.loc() + b.loc(); }, RGBA color = White);
+  Coord loc() const override;
 };
 
 struct HorizontalLine : public Line {

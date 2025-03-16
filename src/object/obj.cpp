@@ -15,6 +15,11 @@ Coord Rotor::loc() const {
 }
 void Rotor::set_rot(float th) { arg = th; }
 
+PointSum::PointSum(Point &a, Point &b, function<Coord(const Point&, const Point&)> locFun, RGBA color) : a(a), b(b), locFun(locFun), Point(color) {}
+Coord PointSum::loc() const {
+  return locFun(a, b);
+}
+
 IntersectionPoint::IntersectionPoint(Line& l1, Line& l2, RGBA color)
     : l1(l1), l2(l2), Point(color) {}
 
