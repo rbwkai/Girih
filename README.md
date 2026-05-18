@@ -249,6 +249,6 @@ Use the provided point/line/circle primitives + keyframes to express geometric m
 
 ---
 
-README by ChatGPT:)
+README by GHOSTS OF TSHUSHIMA :)
 
 
